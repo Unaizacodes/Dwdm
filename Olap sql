@@ -1,0 +1,86 @@
+# EXp 2
+
+
+create database DWM;
+
+use DWM;
+
+CREATE TABLE Products (
+Product_ID INT PRIMARY KEY,
+Product_Name VARCHAR(255),
+Category VARCHAR(255),
+Unit_Price DECIMAL(10, 2)
+);
+INSERT INTO Products (Product_ID, Product_Name, Category, Unit_Price)
+VALUES
+(1, 'Bread', 'Bakery', 2.50),
+(2, 'Milk', 'Dairy', 3.00),
+(3, 'Apples', 'Fruits', 1.20),
+(4, 'Pasta', 'Groceries', 2.00);
+
+
+CREATE TABLE Stores (
+Store_ID INT PRIMARY KEY,
+Store_Name VARCHAR(255),
+Location VARCHAR(255)
+);
+INSERT INTO Stores (Store_ID, Store_Name, Location)
+VALUES
+(1, 'Supermart A', 'City A'),
+(2, 'Supermart B', 'City B'),
+(3, 'Supermart C', 'City C');
+
+
+CREATE TABLE Sales (
+Transaction_ID INT PRIMARY KEY,
+Product_ID INT,
+Store_ID INT,
+Date DATE,
+Sales_Amount DECIMAL(10, 2),
+Quantity_Sold INT,
+FOREIGN KEY (Product_ID) REFERENCES Products(Product_ID),
+FOREIGN KEY (Store_ID) REFERENCES Stores(Store_ID)
+);
+INSERT INTO Sales (Transaction_ID, Product_ID, Store_ID, Date, Sales_Amount, Quantity_Sold)
+VALUES
+(1, 1, 1, '2024-02-19', 5.00, 2),
+(2, 2, 2, '2024-02-19', 6.00, 2),
+(3, 3, 3, '2024-02-18', 2.40, 2);
+
+1. Roll Up                                                                  
+SELECT p.Category, SUM(s.Sales_Amount) AS Total_Sales
+FROM Sales s
+JOIN Products p ON s.Product_ID = p.Product_ID
+GROUP BY p.Category
+LIMIT 0, 25;     
+
+2. Slice          
+SELECT s.Date, p.Product_Name, s.Sales_Amount, s.Quantity_Sold
+FROM Sales s
+JOIN Products p ON s.Product_ID = p.Product_ID
+WHERE s.Date = "2024-02-19"
+Limit 0, 25;    
+
+3. Dice                                                                                             
+SELECT s.Date, p.Product_Name, s.Sales_Amount, s.Quantity_Sold
+FROM Sales s
+JOIN Products p ON s.Product_ID = p.Product_ID
+JOIN Stores st ON s.Store_ID = st.Store_ID
+WHERE p.Category = 'Dairy' AND st.Store_Name = 'Supermart B'
+LIMIT 0, 25;                                                                           
+
+4.Drilldown                                                                                             
+SELECT s.Date, p.Product_Name, s.Sales_Amount, s.Quantity_Sold
+FROM Sales s
+JOIN Products p ON s.Product_ID = p.Product_ID
+
+5. pivot
+SELECT
+   Date,
+   SUM(CASE WHEN Category = 'Bakery' THEN Sales_Amount ELSE 0 END) AS Bakery_Sales,
+   SUM(CASE WHEN Category = 'Dairy' THEN Sales_Amount ELSE 0 END) AS Dairy_Sales,
+   SUM(CASE WHEN Category = 'Fruits' THEN Sales_Amount ELSE 0 END) AS Fruits_Sales,
+   SUM(CASE WHEN Category = 'Groceries' THEN Sales_Amount ELSE 0 END) AS Groceries_Sales
+FROM Sales
+JOIN Products ON Sales.Product_ID = Products.Product_ID
+GROUP BY Date;
