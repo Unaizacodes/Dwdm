@@ -1,0 +1,44 @@
+exp 7
+
+open weka
+click on explorer
+in preprocess ab click on open file
+select the dataset (if direct great else go to c:program files:weka:data)
+choose filter - multifilter
+go to associate tab 
+choose associator as - apiriori 
+ans click on start
+and check the result
+
+
+exp 8
+ open vaka
+explorer
+open file
+select dataset - inospehere
+go to classify tab
+choose classifier - NaiveBayes
+test option - cross-validaion 
+click on start 
+see the reult
+to see the graph-
+in result list (below sart button)
+right click on option calle like bayes.NaiveBayes
+slect visualized threhold curve and slect any ne curve optin
+see he graph
+
+exp 9
+
+explorer
+select data set - inosphere or something else with less numver of data
+visualall grh in the right botton on the preprocess tab 
+go to cluster tab
+in clusterer option choose the hierarchicah cluster
+click on start button
+ see the results
+below the start buttn in result list
+click right on the hierrachicalcluster
+choose visualize tree
+
+click right on the hierrachicalcluster
+choose visualize cluser assignment
